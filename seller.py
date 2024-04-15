@@ -12,7 +12,43 @@ logger = logging.getLogger(__file__)
 
 
 def get_product_list(last_id, client_id, seller_token):
-    """Получить список товаров магазина озон"""
+    """Получить список товаров магазина озон
+
+    Аргументы:
+        last_id (str): ID последнего загруженного товара
+        client_id (str): ID клиента маркетплейса
+        seller_token (str): Токен продавца маркетплейса
+
+    Возвращает:
+        result (dict): перечень товаров маркетплейса
+
+    Выбрасывает исключения:
+        HTTPError
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> get_product_list(last_id, client_id, seller_token)
+            {
+              "result": {
+                "items": [
+                  {
+                    "product_id": 223681945,
+                    "offer_id": "136748"
+                  }
+                ],
+                "total": 1,
+                "last_id": "bnVсbA=="
+              }
+            }
+
+    Некорректное исполнение функции:
+
+        >>> get_product_list(last_id, client_id, seller_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
+
     url = "https://api-seller.ozon.ru/v2/product/list"
     headers = {
         "Client-Id": client_id,
@@ -32,7 +68,30 @@ def get_product_list(last_id, client_id, seller_token):
 
 
 def get_offer_ids(client_id, seller_token):
-    """Получить артикулы товаров магазина озон"""
+    """Получить артикулы товаров магазина озон
+
+    Аргументы:
+        client_id (str): ID клиента маркетплейса
+        seller_token (str): Токен продавца маркетплейса
+
+    Возвращает:
+        offer_ids (list): список товаров маркетплейса
+
+    Выбрасывает исключения:
+        HTTPError
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> get_offer_ids(client_id, seller_token)
+            ["136748", "123123"]
+
+    Некорректное исполнение функции:
+
+        >>> get_offer_ids(client_id, seller_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     last_id = ""
     product_list = []
     while True:
@@ -49,7 +108,40 @@ def get_offer_ids(client_id, seller_token):
 
 
 def update_price(prices: list, client_id, seller_token):
-    """Обновить цены товаров"""
+    """Обновить цены товаров
+
+    Аргументы:
+        prices (list): список цен
+        client_id (str): ID клиента маркетплейса
+        seller_token (str): Токен продавца маркетплейса
+
+    Возвращает:
+        response.json(): объект JSON с ответом сервера
+
+    Выбрасывает исключения:
+        HTTPError
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> update_price(prices, client_id, seller_token)
+        {
+          "result": [
+            {
+              "product_id": 1386,
+              "offer_id": "PH8865",
+              "updated": true,
+              "errors": []
+            }
+          ]
+        }
+
+    Некорректное исполнение функции:
+
+        >>> update_price(prices, client_id, seller_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     url = "https://api-seller.ozon.ru/v1/product/import/prices"
     headers = {
         "Client-Id": client_id,
@@ -62,7 +154,41 @@ def update_price(prices: list, client_id, seller_token):
 
 
 def update_stocks(stocks: list, client_id, seller_token):
-    """Обновить остатки"""
+    """Обновить остатки
+
+    Аргументы:
+        stocks (list): список остатков
+        client_id (str): ID клиента маркетплейса
+        seller_token (str): Токен продавца маркетплейса
+
+    Возвращает:
+        response.json(): объект JSON с ответом сервера
+
+    Выбрасывает исключения:
+        HTTPError
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> update_stocks(stocks, client_id, seller_token)
+        {
+          "result": [
+            {
+              "warehouse_id": 22142605386000,
+              "product_id": 118597312,
+              "offer_id": "PH11042",
+              "updated": true,
+              "errors": []
+            }
+          ]
+        }
+
+    Некорректное исполнение функции:
+
+        >>> update_stocks(stocks, client_id, seller_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     url = "https://api-seller.ozon.ru/v1/product/import/stocks"
     headers = {
         "Client-Id": client_id,
@@ -75,7 +201,40 @@ def update_stocks(stocks: list, client_id, seller_token):
 
 
 def download_stock():
-    """Скачать файл ostatki с сайта casio"""
+    """Скачать файл ostatki с сайта casio
+
+    Аргументы:
+        нет
+
+    Возвращает:
+        watch_remnants (list): остатки
+
+    Выбрасывает исключения:
+        HTTPError
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> download_stock()
+        [{'Код': '',
+          'Наименование товара': 'CASIO Baby-G',
+          'Изображение': '',
+          'Цена': '',
+          'Количество': '',
+          'Заказ': ''},
+         {'Код': 71301,
+          'Наименование товара': 'BA-110BE-4A',
+          'Изображение': 'Показать',
+          'Цена': "19'990.00 руб.",
+          'Количество': 6,
+          'Заказ': ''}]
+
+    Некорректное исполнение функции:
+
+        >>> download_stock()
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     # Скачать остатки с сайта
     casio_url = "https://timeworld.ru/upload/files/ostatki.zip"
     session = requests.Session()
@@ -96,6 +255,15 @@ def download_stock():
 
 
 def create_stocks(watch_remnants, offer_ids):
+    """Создать объект для загрузки остатков на маркетплейс
+
+    Аргументы:
+        watch_remnants (list): остатки
+        offer_ids (list): перечень товаров
+
+    Возвращает:
+        stocks (list): остатки
+    """
     # Уберем то, что не загружено в seller
     stocks = []
     for watch in watch_remnants:
@@ -116,6 +284,15 @@ def create_stocks(watch_remnants, offer_ids):
 
 
 def create_prices(watch_remnants, offer_ids):
+    """Создать объект для загрузки цен на маркетплейс
+
+    Аргументы:
+        watch_remnants (list): остатки
+        offer_ids (list): перечень товаров
+
+    Возвращает:
+        prices (list): остатки
+    """
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:
@@ -131,12 +308,74 @@ def create_prices(watch_remnants, offer_ids):
 
 
 def price_conversion(price: str) -> str:
-    """Преобразовать цену. Пример: 5'990.00 руб. -> 5990"""
+    """Преобразовать цену. Пример: 5'990.00 руб. -> 5990
+
+    Аргументы:
+        price (str): Цена в строковом формате с разделителями разрядов и с указанием валюты
+
+    Возвращает:
+        str: Цена в строковом формате без разделителей разрядов и указания валюты
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> price = "5'990.00 руб."
+        >>> price_conversion(price)
+        5990
+
+    Некорректное исполнение функции:
+
+        >>> price = 5990
+        >>> price_conversion(price)
+        ---------------------------------------------------------------------------
+        AttributeError                            Traceback (most recent call last)
+        Cell In[57], line 1
+        ----> 1 price_conversion(price)
+
+        Cell In[52], line 2, in price_conversion(price)
+              1 def price_conversion(price):
+        ----> 2     return re.sub("[^0-9]", "", price.split(".")[0])
+
+        AttributeError: 'int' object has no attribute 'split'
+    """
     return re.sub("[^0-9]", "", price.split(".")[0])
 
 
 def divide(lst: list, n: int):
-    """Разделить список lst на части по n элементов"""
+    """Разделить список lst на части по n элементов
+    Аргументы:
+        lst (list): Список, который нужно разделить
+        n (int): Количество элементов в каждой части разделённого списка
+
+    Генерирует:
+        list: Часть списка
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> for part in divide([1, 2, 3, 4, 5], 2):
+        >>> ... print(part)
+        [1, 2]
+        [3, 4]
+        [5]
+
+    Некорректное исполнение функции:
+
+        >>> for part in divide([1, 2, 3, 4, 5], 0):
+        >>> ... print(part)
+    ---------------------------------------------------------------------------
+    ValueError                                Traceback (most recent call last)
+    Cell In[16], line 1
+    ----> 1 for part in divide([1,], 0):
+          2     print(part)
+
+    Cell In[12], line 17, in divide(lst, n)
+          1 def divide(lst: list, n: int):
+    ---> 17     for i in range(0, len(lst), n):
+         18         yield lst[i : i + n]
+
+    ValueError: range() arg 3 must not be zero
+    """
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
 

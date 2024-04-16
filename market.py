@@ -310,6 +310,15 @@ def create_prices(watch_remnants, offer_ids):
 
 
 async def upload_prices(watch_remnants, campaign_id, market_token):
+    """Загрузить остатки на маркетплейс
+
+    Аргументы:
+        watch_remnants (list): список остатков
+        campaign_id (str): идентификатор продавца маркетплейса
+        market_token (str): токен продавца маркетплейса
+
+    Возвращает:
+        prices (list): перечень загруженных цен"""
     offer_ids = get_offer_ids(campaign_id, market_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_prices in list(divide(prices, 500)):
@@ -318,6 +327,17 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
 
 
 async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id):
+    """Загрузить остатки на маркетплейс
+
+    Аргументы:
+        watch_remnants (list): список остатков
+        campaign_id (str): идентификатор продавца маркетплейса
+        market_token (str): токен продавца маркетплейса
+        warehouse_id (str): идентификатор склада
+
+    Возвращает:
+        not_empty (list): перечень товаров с ненулевым остатком
+        stocks (list): перечень загруженных остатков"""
     offer_ids = get_offer_ids(campaign_id, market_token)
     stocks = create_stocks(watch_remnants, offer_ids, warehouse_id)
     for some_stock in list(divide(stocks, 2000)):

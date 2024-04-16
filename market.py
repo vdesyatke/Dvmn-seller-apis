@@ -11,6 +11,42 @@ logger = logging.getLogger(__file__)
 
 
 def get_product_list(page, campaign_id, access_token):
+    """Получить список товаров магазина Я.Маркет
+
+        Аргументы:
+        page (str): номер страницы
+        campaign_id (str): ID продавца маркетплейса
+        access_token (str): токен продавца маркетплейса
+
+    Возвращает:
+        result (dict): перечень товаров маркетплейса
+
+    Выбрасывает исключения:
+        HTTPError
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> get_product_list(page, campaign_id, access_token)
+        {
+            "paging": {
+                "nextPageToken": "string",
+                "prevPageToken": "string"
+            },
+            "hiddenOffers": [
+                {
+                    "offerId": "string"
+                }
+            ]
+        }
+
+
+    Некорректное исполнение функции:
+
+        >>> get_product_list(page, campaign_id, access_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -30,6 +66,30 @@ def get_product_list(page, campaign_id, access_token):
 
 
 def update_stocks(stocks, campaign_id, access_token):
+    """Обновить цены на маркетплейсе
+
+        Аргументы:
+        stocks (list): список остатков
+        campaign_id (str): идентификатор продавца маркетплейса
+        access_token (str): токен продавца маркетплейса
+
+    Возвращает:
+        response_object (dict): объект ответа
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> update_stocks(stocks, campaign_id, access_token)
+        {
+            "status": "OK"
+        }
+
+    Некорректное исполнение функции:
+
+        >>> update_stocks(stocks, campaign_id, access_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -46,6 +106,30 @@ def update_stocks(stocks, campaign_id, access_token):
 
 
 def update_price(prices, campaign_id, access_token):
+    """Обновить цены на маркетплейсе
+
+        Аргументы:
+        prices (list): список цен
+        campaign_id (str): идентификатор продавца маркетплейса
+        access_token (str): токен продавца маркетплейса
+
+    Возвращает:
+        response_object (dict): объект ответа
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> update_price(prices, campaign_id, access_token)
+        {
+            "status": "OK"
+        }
+
+    Некорректное исполнение функции:
+
+        >>> update_price(prices, campaign_id, access_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -62,7 +146,27 @@ def update_price(prices, campaign_id, access_token):
 
 
 def get_offer_ids(campaign_id, market_token):
-    """Получить артикулы товаров Яндекс маркета"""
+    """Получить артикулы товаров Яндекс маркета
+
+        Аргументы:
+        campaign_id (str): айди продавца маркетплейса
+        market_token (str): токен продавца маркетплейса
+
+    Возвращает:
+        offer_ids (list): список артикулов товаров
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> get_offer_ids(campaign_id, market_token)
+        [71301, 73702]
+
+    Некорректное исполнение функции:
+
+        >>> get_offer_ids(campaign_id, market_token)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     page = ""
     product_list = []
     while True:
@@ -78,6 +182,40 @@ def get_offer_ids(campaign_id, market_token):
 
 
 def create_stocks(watch_remnants, offer_ids, warehouse_id):
+    """Получить список товаров магазина Я.Маркет
+
+        Аргументы:
+        watch_remnants (list): остатки товаров
+        offer_ids (list): список артикулов товаров
+        warehouse_id (str): идентификатор склада
+
+    Возвращает:
+        stocks (list): список остатков
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> create_stocks(watch_remnants, offer_ids, warehouse_id)
+        [
+            {
+                "sku": 71301,
+                "warehouseId": 34JHKH,
+                "items": [
+                    {
+                        "count": 0,
+                        "type": "FIT",
+                        "updatedAt": 2023-10-10,
+                    }
+                ],
+            },
+        ]
+
+    Некорректное исполнение функции:
+
+        >>> create_stocks(watch_remnants, offer_ids, warehouse_id)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     # Уберем то, что не загружено в market
     stocks = list()
     date = str(datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z")
@@ -123,6 +261,35 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
 
 
 def create_prices(watch_remnants, offer_ids):
+    """Получить список товаров магазина Я.Маркет
+
+        Аргументы:
+        watch_remnants (list): остатки товаров
+        offer_ids (list): список артикулов товаров
+
+    Возвращает:
+        prices (list): список цен
+
+    Примеры:
+    Корректное исполнение функции:
+
+        >>> create_prices(watch_remnants, offer_ids)
+        [
+            {
+                "id": 71301,
+                "price": {
+                    "value": 6399,
+                    "currencyId": "RUR",
+                },
+            }
+        ]
+
+    Некорректное исполнение функции:
+
+        >>> create_prices(watch_remnants, offer_ids)
+        HTTPError: 400 (если указан неверный параметр).
+        HTTPError: 403 (если доступ запрещен).
+    """
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:

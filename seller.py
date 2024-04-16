@@ -16,7 +16,7 @@ def get_product_list(last_id, client_id, seller_token):
 
     Аргументы:
         last_id (str): ID последнего загруженного товара
-        client_id (str): ID клиента маркетплейса
+        client_id (str): ID продавца маркетплейса
         seller_token (str): Токен продавца маркетплейса
 
     Возвращает:
@@ -29,18 +29,16 @@ def get_product_list(last_id, client_id, seller_token):
     Корректное исполнение функции:
 
         >>> get_product_list(last_id, client_id, seller_token)
-            {
-              "result": {
-                "items": [
-                  {
-                    "product_id": 223681945,
-                    "offer_id": "136748"
-                  }
-                ],
-                "total": 1,
-                "last_id": "bnVсbA=="
+        {
+            "items": [
+              {
+                "product_id": 223681945,
+                "offer_id": "136748"
               }
-            }
+            ],
+            "total": 1,
+            "last_id": "bnVсbA=="
+        }
 
     Некорректное исполнение функции:
 
@@ -71,7 +69,7 @@ def get_offer_ids(client_id, seller_token):
     """Получить артикулы товаров магазина озон
 
     Аргументы:
-        client_id (str): ID клиента маркетплейса
+        client_id (str): ID продавца маркетплейса
         seller_token (str): Токен продавца маркетплейса
 
     Возвращает:
@@ -112,11 +110,11 @@ def update_price(prices: list, client_id, seller_token):
 
     Аргументы:
         prices (list): список цен
-        client_id (str): ID клиента маркетплейса
+        client_id (str): ID продавца маркетплейса
         seller_token (str): Токен продавца маркетплейса
 
     Возвращает:
-        response.json(): объект JSON с ответом сервера
+        response.json() (dict): словарь с ответом сервера
 
     Выбрасывает исключения:
         HTTPError
@@ -158,11 +156,11 @@ def update_stocks(stocks: list, client_id, seller_token):
 
     Аргументы:
         stocks (list): список остатков
-        client_id (str): ID клиента маркетплейса
+        client_id (str): ID продавца маркетплейса
         seller_token (str): Токен продавца маркетплейса
 
     Возвращает:
-        response.json(): объект JSON с ответом сервера
+        response.json() (dict): словарь с ответом сервера
 
     Выбрасывает исключения:
         HTTPError
@@ -381,6 +379,15 @@ def divide(lst: list, n: int):
 
 
 async def upload_prices(watch_remnants, client_id, seller_token):
+    """Загрузить цены на маркетплейс
+
+    Аргументы:
+        watch_remnants (list): список остатков
+        client_id (str): ID продавца маркетплейса
+        seller_token (str): Токен продавца маркетплейса
+
+    Возвращает:
+        prices (list): перечень загруженных цен"""
     offer_ids = get_offer_ids(client_id, seller_token)
     prices = create_prices(watch_remnants, offer_ids)
     for some_price in list(divide(prices, 1000)):
@@ -389,6 +396,16 @@ async def upload_prices(watch_remnants, client_id, seller_token):
 
 
 async def upload_stocks(watch_remnants, client_id, seller_token):
+    """Загрузить остатки на маркетплейс
+
+    Аргументы:
+        watch_remnants (list): список остатков
+        client_id (str): ID продавца маркетплейса
+        seller_token (str): Токен продавца маркетплейса
+
+    Возвращает:
+        not_empty (list): перечень товаров с ненулевым остатком
+        stocks (list): перечень загруженных остатков"""
     offer_ids = get_offer_ids(client_id, seller_token)
     stocks = create_stocks(watch_remnants, offer_ids)
     for some_stock in list(divide(stocks, 100)):
